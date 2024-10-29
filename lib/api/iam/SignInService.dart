@@ -1,7 +1,7 @@
 import 'dart:convert';
+import 'package:appmovilesfrontendflutter/api/iam/SignInResponse.dart';
 import 'package:http/http.dart' as http;
-import '../api/SignInRequest.dart';
-import '../api/SignInResponse.dart';
+import 'SignInRequest.dart';
 
 class SignInService {
   final String _baseUrl = 'https://appchaquitaclla.azurewebsites.net/api/v1/authentication/sign-in';

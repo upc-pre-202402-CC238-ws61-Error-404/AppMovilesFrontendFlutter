@@ -1,4 +1,4 @@
-import 'package:appmovilesfrontendflutter/api/SignInResponse.dart';
+import 'package:appmovilesfrontendflutter/api/iam/SignInResponse.dart';
 
 class AuthManager {
   static final AuthManager _instance = AuthManager._internal();

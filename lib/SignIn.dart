@@ -1,8 +1,9 @@
-import 'package:appmovilesfrontendflutter/api/AuthManager.dart';
-import 'package:appmovilesfrontendflutter/api/SignInRequest.dart';
-import 'package:appmovilesfrontendflutter/api/SignInService.dart';
+import 'package:appmovilesfrontendflutter/api/iam/AuthManager.dart';
+import 'package:appmovilesfrontendflutter/api/iam/SignInRequest.dart';
+import 'package:appmovilesfrontendflutter/api/iam/SignInService.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'Menu.dart';
 
 class Signin extends StatefulWidget {
   const Signin({super.key});
@@ -33,6 +34,11 @@ class _SigninState extends State<Signin> {
       }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Sign-in successful: ${response.username}')),
+      );
+      // Navigate to Menu
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Menu()),
       );
     } else {
       // Handle sign-in error
