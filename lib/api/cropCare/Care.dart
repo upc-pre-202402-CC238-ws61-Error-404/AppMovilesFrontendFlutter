@@ -12,4 +12,9 @@ class Care {
       date: json['date'],
     );
   }
+
+  @override
+  String toString() {
+    return 'Suggestion: $suggestion';
+  }
 }

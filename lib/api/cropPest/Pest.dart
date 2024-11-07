@@ -14,4 +14,8 @@ class Pest {
       solution: json['solution'],
     );
   }
+  @override
+  String toString() {
+    return 'Name: $name';
+  }
 }

@@ -3,8 +3,11 @@ import 'package:appmovilesfrontendflutter/api/crop/CropService.dart';
 import 'package:appmovilesfrontendflutter/api/crop/CropRequest.dart';
 import 'package:appmovilesfrontendflutter/api/cropDisease/DiseaseService.dart';
 import 'package:appmovilesfrontendflutter/api/cropPest/PestService.dart';
+import 'package:appmovilesfrontendflutter/api/cropCare/CareService.dart';
+import 'package:appmovilesfrontendflutter/api/CropDisease/Disease.dart' as CropDisease;
 import 'package:appmovilesfrontendflutter/api/cropDisease/Disease.dart';
 import 'package:appmovilesfrontendflutter/api/cropPest/Pest.dart';
+import 'package:appmovilesfrontendflutter/api/cropCare/Care.dart';
 
 class Crops extends StatefulWidget {
   const Crops({super.key});
@@ -17,26 +20,16 @@ class _CropsState extends State<Crops> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _imageUrlController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _careIdController = TextEditingController();
   List<int> _selectedDiseases = [];
   List<int> _selectedPests = [];
   List<int> _selectedCares = [];
-  late Future<List<Disease>?> _futureDiseases;
-  late Future<List<Pest>?> _futurePests;
-
-  @override
-  void initState() {
-    super.initState();
-    _futurePests = PestService.getPests();
-  }
 
   Future<void> _createCrop() async {
     final name = _nameController.text;
     final imageUrl = _imageUrlController.text;
     final description = _descriptionController.text;
-    final careId = int.tryParse(_careIdController.text);
-    if (name.isNotEmpty && imageUrl.isNotEmpty && description.isNotEmpty && careId != null) {
-      _selectedCares.add(careId);
+
+    if (name.isNotEmpty && imageUrl.isNotEmpty && description.isNotEmpty) {
       final request = CropRequest(
         name: name,
         imageUrl: imageUrl,
@@ -45,18 +38,19 @@ class _CropsState extends State<Crops> {
         pests: _selectedPests,
         cares: _selectedCares,
       );
+
       final success = await CropService().createCrop(request);
       if (success) {
         _nameController.clear();
         _imageUrlController.clear();
         _descriptionController.clear();
-        _careIdController.clear();
         setState(() {
-          _selectedDiseases.clear();
-          _selectedPests.clear();
-          _selectedCares.clear();
+          _selectedDiseases = [];
+          _selectedPests = [];
+          _selectedCares = [];
         });
         ScaffoldMessenger.of(context).showSnackBar(
+
           SnackBar(content: Text('Crop created successfully')),
         );
       } else {
@@ -67,11 +61,71 @@ class _CropsState extends State<Crops> {
     }
   }
 
+  Future<void> _selectDiseases() async {
+    final diseases = await DiseaseService.getDiseases();
+    if (diseases != null) {
+      final selected = await showDialog<List<int>>(
+        context: context,
+        builder: (context) {
+          return MultiSelectDialog<CropDisease.Disease>(
+            items: diseases,
+            title: 'Select Diseases',
+          );
+        },
+      );
+      if (selected != null) {
+        setState(() {
+          _selectedDiseases = selected;
+        });
+      }
+    }
+  }
+
+  Future<void> _selectPests() async {
+    final pests = await PestService.getPests();
+    if (pests != null) {
+      final selected = await showDialog<List<int>>(
+        context: context,
+        builder: (context) {
+          return MultiSelectDialog<Pest>(
+            items: pests,
+            title: 'Select Pests',
+          );
+        },
+      );
+      if (selected != null) {
+        setState(() {
+          _selectedPests = selected;
+        });
+      }
+    }
+  }
+
+  Future<void> _selectCares() async {
+    final cares = await CareService.getCares();
+    if (cares != null) {
+      final selected = await showDialog<List<int>>(
+        context: context,
+        builder: (context) {
+          return MultiSelectDialog<Care>(
+            items: cares,
+            title: 'Select Cares',
+          );
+        },
+      );
+      if (selected != null) {
+        setState(() {
+          _selectedCares = selected;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Crops'),
+        title: Text('Create Crop'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -79,7 +133,7 @@ class _CropsState extends State<Crops> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Crop Name'),
+              decoration: InputDecoration(labelText: 'Name'),
             ),
             TextField(
               controller: _imageUrlController,
@@ -89,70 +143,18 @@ class _CropsState extends State<Crops> {
               controller: _descriptionController,
               decoration: InputDecoration(labelText: 'Description'),
             ),
-            FutureBuilder<List<Disease>?>(
-              future: _futureDiseases,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Text('No diseases available');
-                } else {
-                  return DropdownButton<int>(
-                    hint: Text('Select Disease'),
-                    items: snapshot.data!.map((disease) {
-                      return DropdownMenuItem<int>(
-                        value: disease.id,
-                        child: Text(disease.name),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        if (value != null && !_selectedDiseases.contains(value)) {
-                          _selectedDiseases.add(value);
-                        }
-                      });
-                    },
-                  );
-                }
-              },
+            ElevatedButton(
+              onPressed: _selectDiseases,
+              child: Text('Select Diseases'),
             ),
-            FutureBuilder<List<Pest>?>(
-              future: _futurePests,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Text('No pests available');
-                } else {
-                  return DropdownButton<int>(
-                    hint: Text('Select Pest'),
-                    items: snapshot.data!.map((pest) {
-                      return DropdownMenuItem<int>(
-                        value: pest.id,
-                        child: Text(pest.name),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        if (value != null && !_selectedPests.contains(value)) {
-                          _selectedPests.add(value);
-                        }
-                      });
-                    },
-                  );
-                }
-              },
+            ElevatedButton(
+              onPressed: _selectPests,
+              child: Text('Select Pests'),
             ),
-            TextField(
-              controller: _careIdController,
-              decoration: InputDecoration(labelText: 'Care ID'),
-              keyboardType: TextInputType.number,
+            ElevatedButton(
+              onPressed: _selectCares,
+              child: Text('Select Cares'),
             ),
-            SizedBox(height: 16),
             ElevatedButton(
               onPressed: _createCrop,
               child: Text('Create Crop'),
@@ -160,6 +162,55 @@ class _CropsState extends State<Crops> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class MultiSelectDialog<T> extends StatefulWidget {
+  final List<T> items;
+  final String title;
+
+  MultiSelectDialog({required this.items, required this.title});
+
+  @override
+  _MultiSelectDialogState<T> createState() => _MultiSelectDialogState<T>();
+}
+
+class _MultiSelectDialogState<T> extends State<MultiSelectDialog<T>> {
+  final List<int> _selectedItems = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(widget.title),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: widget.items.map((item) {
+            final index = widget.items.indexOf(item);
+            return CheckboxListTile(
+              title: Text(item.toString()),
+              value: _selectedItems.contains(index),
+              onChanged: (bool? value) {
+                setState(() {
+                  if (value == true) {
+                    _selectedItems.add(index);
+                  } else {
+                    _selectedItems.remove(index);
+                  }
+                });
+              },
+            );
+          }).toList(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context, _selectedItems);
+          },
+          child: Text('OK'),
+        ),
+      ],
     );
   }
 }

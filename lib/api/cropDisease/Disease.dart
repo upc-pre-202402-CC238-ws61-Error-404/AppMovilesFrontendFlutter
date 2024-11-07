@@ -14,4 +14,9 @@ class Disease {
       solution: json['solution'],
     );
   }
+
+  @override
+  String toString() {
+    return 'Name: $name';
+  }
 }
