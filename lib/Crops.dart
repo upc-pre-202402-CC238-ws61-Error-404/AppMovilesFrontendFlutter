@@ -5,7 +5,6 @@ import 'package:appmovilesfrontendflutter/api/cropDisease/DiseaseService.dart';
 import 'package:appmovilesfrontendflutter/api/cropPest/PestService.dart';
 import 'package:appmovilesfrontendflutter/api/cropCare/CareService.dart';
 import 'package:appmovilesfrontendflutter/api/CropDisease/Disease.dart' as CropDisease;
-import 'package:appmovilesfrontendflutter/api/cropDisease/Disease.dart';
 import 'package:appmovilesfrontendflutter/api/cropPest/Pest.dart';
 import 'package:appmovilesfrontendflutter/api/cropCare/Care.dart';
 
@@ -50,7 +49,6 @@ class _CropsState extends State<Crops> {
           _selectedCares = [];
         });
         ScaffoldMessenger.of(context).showSnackBar(
-
           SnackBar(content: Text('Crop created successfully')),
         );
       } else {
@@ -70,6 +68,7 @@ class _CropsState extends State<Crops> {
           return MultiSelectDialog<CropDisease.Disease>(
             items: diseases,
             title: 'Select Diseases',
+            selectedItems: _selectedDiseases,
           );
         },
       );
@@ -90,6 +89,7 @@ class _CropsState extends State<Crops> {
           return MultiSelectDialog<Pest>(
             items: pests,
             title: 'Select Pests',
+            selectedItems: _selectedPests,
           );
         },
       );
@@ -110,6 +110,7 @@ class _CropsState extends State<Crops> {
           return MultiSelectDialog<Care>(
             items: cares,
             title: 'Select Cares',
+            selectedItems: _selectedCares,
           );
         },
       );
@@ -169,15 +170,22 @@ class _CropsState extends State<Crops> {
 class MultiSelectDialog<T> extends StatefulWidget {
   final List<T> items;
   final String title;
+  final List<int> selectedItems;
 
-  MultiSelectDialog({required this.items, required this.title});
+  MultiSelectDialog({required this.items, required this.title, required this.selectedItems});
 
   @override
   _MultiSelectDialogState<T> createState() => _MultiSelectDialogState<T>();
 }
 
 class _MultiSelectDialogState<T> extends State<MultiSelectDialog<T>> {
-  final List<int> _selectedItems = [];
+  late List<int> _selectedItems;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedItems = List.from(widget.selectedItems);
+  }
 
   @override
   Widget build(BuildContext context) {
