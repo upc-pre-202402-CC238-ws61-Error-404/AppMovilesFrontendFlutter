@@ -102,8 +102,8 @@ class _PestsState extends State<Pests> {
                         return Column(
                           children: [
                             ListTile(
-                              title: Text('Id: ${pest.id}'),
-                              subtitle: Text('Name: ${pest.name}\nDescription: ${pest.description}\nSolution: ${pest.solution}'),
+                              title: Text('Name: ${pest.name}'),
+                              subtitle: Text('Description: ${pest.description}\n\nSolution: ${pest.solution}'),
                             ),
                             const Divider(),
                           ],

@@ -9,15 +9,15 @@ class Crop {
 
   Crop({required this.id, required this.name, required this.imageUrl, required this.description, required this.diseases, required this.pests, required this.cares});
 
-  factory Crop.fromJson(Map<String, dynamic> json){
+  factory Crop.fromJson(Map<String, dynamic> json) {
     return Crop(
       id: json['id'],
       name: json['name'],
       imageUrl: json['imageUrl'],
       description: json['description'],
-      diseases: json['diseases'],
-      pests: json['pests'],
-      cares: json['cares'],
+      diseases: List<int>.from(json['diseases']),
+      pests: List<int>.from(json['pests']),
+      cares: List<int>.from(json['cares']),
     );
   }
 }

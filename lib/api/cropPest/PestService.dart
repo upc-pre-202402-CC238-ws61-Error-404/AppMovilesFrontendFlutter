@@ -10,7 +10,7 @@ class PestService {
   static Future<List<Pest>?> getPests() async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.get(
-      Uri.parse('https://appchaquitaclla.azurewebsites.net/api/v1/crops-management/crops/pests'),
+      Uri.parse('https://appmovileschaquiservertacllamaximum.azurewebsites.net/api/v1/crops-management/crops/pests'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -30,7 +30,7 @@ class PestService {
   Future<bool> createPest(PestRequest request) async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.post(
-      Uri.parse('https://appchaquitaclla.azurewebsites.net/api/v1/crops-management/crops/pests'),
+      Uri.parse('https://appmovileschaquiservertacllamaximum.azurewebsites.net/api/v1/crops-management/crops/pests'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',

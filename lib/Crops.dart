@@ -27,7 +27,6 @@ class _CropsState extends State<Crops> {
   @override
   void initState() {
     super.initState();
-    _futureDiseases = DiseaseService.getDiseases();
     _futurePests = PestService.getPests();
   }
 

@@ -7,7 +7,7 @@ class CropService {
   Future<bool> createCrop(CropRequest request) async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.post(
-      Uri.parse('https://appchaquitaclla.azurewebsites.net/api/v1/crops-management/crops'),
+      Uri.parse('https://appmovileschaquiservertacllamaximum.azurewebsites.net/api/v1/crops-management/crops'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
