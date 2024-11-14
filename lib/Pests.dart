@@ -60,6 +60,8 @@ class _PestsState extends State<Pests> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFF005F40),
+        foregroundColor: Colors.white,
         title: Text('Pests'),
       ),
       body: Padding(
@@ -68,21 +70,46 @@ class _PestsState extends State<Pests> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Pest Name'),
-            ),
-            TextField(
-              controller: _descriptionController,
-              decoration: InputDecoration(labelText: 'Description'),
-            ),
-            TextField(
-              controller: _solutionController,
-              decoration: InputDecoration(labelText: 'Solution'),
+              decoration: InputDecoration(
+                labelText: 'Pest Name',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                ),
+              ),
             ),
             SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _createPest,
-              child: Text('Create Pest'),
+            TextField(
+              controller: _descriptionController,
+              decoration: InputDecoration(
+                labelText: 'Description',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                ),
+              ),
             ),
+            SizedBox(height: 16),
+            TextField(
+              controller: _solutionController,
+              decoration: InputDecoration(
+                labelText: 'Solution',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                ),
+              ),
+            ),
+            SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child:ElevatedButton(
+                onPressed: _createPest,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF9A5D4E),
+                  foregroundColor: Colors.white,
+                ),
+                child: Text('Create', style: TextStyle(fontSize: 20)),
+              ),
+            ),
+
             SizedBox(height: 16),
             Expanded(
               child: FutureBuilder<List<Pest>?>(

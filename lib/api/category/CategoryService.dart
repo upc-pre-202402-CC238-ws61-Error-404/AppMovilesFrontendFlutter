@@ -9,7 +9,7 @@ class CategoryService {
   static Future<List<Category>?> getCategories() async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.get(
-      Uri.parse('https://appmovileschaquiservertacllamaximum.azurewebsites.net/api/v1/forum/categories'),
+      Uri.parse('http://10.0.2.2:5138/api/v1/forum/categories'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -29,7 +29,7 @@ class CategoryService {
   Future<bool> createCategory(CategoryRequest request) async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.post(
-      Uri.parse('https://appmovileschaquiservertacllamaximum.azurewebsites.net/api/v1/forum/categories'),
+      Uri.parse('http://10.0.2.2:5138/api/v1/forum/categories'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -45,4 +45,44 @@ class CategoryService {
       return false;
     }
   }
+
+  Future<bool> updateCategory(int categoryId, CategoryRequest request) async {
+    final token = AuthManager().signInResponse?.token;
+    final response = await http.put(
+      Uri.parse('http://10.0.2.2:5138/api/v1/forum/categories/$categoryId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode(request.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      print('Failed to update category. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return false;
+    }
+  }
+
+  Future<bool> deleteCategory(int categoryId) async {
+    final token = AuthManager().signInResponse?.token;
+    final response = await http.delete(
+      Uri.parse('http://10.0.2.2:5138/api/v1/forum/categories/$categoryId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 204) {
+      return true;
+    } else {
+      print('Failed to delete category. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return false;
+    }
+  }
+
 }
