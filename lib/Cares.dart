@@ -13,7 +13,21 @@ class Cares extends StatefulWidget {
 class _CaresState extends State<Cares> {
   final TextEditingController _suggestionController = TextEditingController();
   final CareService _careService = CareService();
-  Future <List<Care>?>? _futureCares;
+  Future<List<Care>?>? _futureCares;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCares();
+  }
+
+  void _loadCares() {
+    setState(() {
+      _futureCares = CareService.getCares();
+    });
+  }
+
 
   void _createCare() async {
     final suggestion = _suggestionController.text;
@@ -25,7 +39,7 @@ class _CaresState extends State<Cares> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Care created successfully')),
         );
-
+        _loadCares();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to create care')),
@@ -42,6 +56,8 @@ class _CaresState extends State<Cares> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFF005F40),
+        foregroundColor: Colors.white,
         title: Text('Create Care'),
       ),
       body: Padding(
@@ -50,16 +66,28 @@ class _CaresState extends State<Cares> {
           children: [
             TextField(
               controller: _suggestionController,
-              decoration: InputDecoration(labelText: 'Suggestion'),
+              decoration: InputDecoration(
+                labelText: 'Suggestion',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                ),
+              ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _createCare,
-              child: Text('Create Care'),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _createCare,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF9A5D4E),
+                  foregroundColor: Colors.white,
+                ),
+                child: Text('Create', style: TextStyle(fontSize: 20)),
+              ),
             ),
             SizedBox(height: 16),
-
-            Expanded(child: FutureBuilder<List<Care>?>(
+            Expanded(
+                child: FutureBuilder<List<Care>?>(
               future: CareService.getCares(),
               builder: (context, AsyncSnapshot<List<Care>?> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {

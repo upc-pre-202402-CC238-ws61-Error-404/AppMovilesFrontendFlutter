@@ -1,3 +1,4 @@
+import 'package:appmovilesfrontendflutter/api/crop/Crop.dart';
 import 'package:flutter/material.dart';
 import 'package:appmovilesfrontendflutter/api/crop/CropService.dart';
 import 'package:appmovilesfrontendflutter/api/crop/CropRequest.dart';
@@ -22,8 +23,23 @@ class _CropsState extends State<Crops> {
   List<int> _selectedDiseases = [];
   List<int> _selectedPests = [];
   List<int> _selectedCares = [];
+  Future<List<Crop>>? _futureCrops;
+  Crop? _selectedCrop;
 
-  Future<void> _createCrop() async {
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCrops();
+  }
+
+  void _loadCrops() {
+    setState(() {
+      _futureCrops = CropService().getCrops();
+    });
+  }
+
+  Future<void> _createOrUpdateCrop() async {
     final name = _nameController.text;
     final imageUrl = _imageUrlController.text;
     final description = _descriptionController.text;
@@ -38,24 +54,57 @@ class _CropsState extends State<Crops> {
         cares: _selectedCares,
       );
 
-      final success = await CropService().createCrop(request);
+      bool success;
+      if (_selectedCrop == null) {
+        success = await CropService().createCrop(request);
+      } else {
+        success = await CropService().updateCrop(_selectedCrop!.id, request);
+      }
+
       if (success) {
         _nameController.clear();
         _imageUrlController.clear();
         _descriptionController.clear();
+        _selectedCrop = null;
         setState(() {
           _selectedDiseases = [];
           _selectedPests = [];
           _selectedCares = [];
+          _futureCrops = CropService().getCrops();
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Crop created successfully')),
+          SnackBar(content: Text('Crop saved successfully')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create crop')),
+          SnackBar(content: Text('Failed to save crop')),
         );
       }
+    }
+  }
+
+  void _editCrop(Crop crop) {
+    setState(() {
+      _nameController.text = crop.name;
+      _imageUrlController.text = crop.imageUrl;
+      _descriptionController.text = crop.description;
+      _selectedDiseases = crop.diseases;
+      _selectedPests = crop.pests;
+      _selectedCares = crop.cares;
+      _selectedCrop = crop;
+    });
+  }
+
+  Future<void> _deleteCrop(int cropId) async {
+    final success = await CropService().deleteCrop(cropId);
+    if (success) {
+      setState(() {
+        _futureCrops = CropService().getCrops();
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete crop')),
+      );
     }
   }
 
@@ -126,6 +175,8 @@ class _CropsState extends State<Crops> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFF005F40),
+        foregroundColor: Colors.white,
         title: Text('Create Crop'),
       ),
       body: Padding(
@@ -134,31 +185,133 @@ class _CropsState extends State<Crops> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
+              decoration: InputDecoration(
+                labelText: 'Name',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                ),
+              ),
             ),
+            SizedBox(height: 10),
             TextField(
               controller: _imageUrlController,
-              decoration: InputDecoration(labelText: 'Image URL'),
+              decoration: InputDecoration(
+                labelText: 'Image URL',border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12.0)),
+              ),
+              ),
             ),
+            SizedBox(height: 10),
             TextField(
               controller: _descriptionController,
-              decoration: InputDecoration(labelText: 'Description'),
+              decoration: InputDecoration(
+                labelText: 'Description',border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12.0)),
+              ),
+              ),
             ),
-            ElevatedButton(
-              onPressed: _selectDiseases,
-              child: Text('Select Diseases'),
+            SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child:ElevatedButton(
+                onPressed: _selectDiseases,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF9A5D4E),
+                  foregroundColor: Colors.white,
+                ),
+                child: Text('Select Diseases', style: TextStyle(fontSize: 20)),
+              ),
             ),
-            ElevatedButton(
-              onPressed: _selectPests,
-              child: Text('Select Pests'),
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _selectPests,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF9A5D4E),
+                  foregroundColor: Colors.white,
+                ),
+                child: Text('Select Pests', style: TextStyle(fontSize: 20)),
+              ),
             ),
-            ElevatedButton(
-              onPressed: _selectCares,
-              child: Text('Select Cares'),
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _selectCares,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF9A5D4E),
+                  foregroundColor: Colors.white,
+                ),
+                child: Text('Select Cares', style: TextStyle(fontSize: 20)),
+              ),
             ),
-            ElevatedButton(
-              onPressed: _createCrop,
-              child: Text('Create Crop'),
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _createOrUpdateCrop,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF9A5D4E),
+                  foregroundColor: Colors.white,
+                ),
+                child: Text('Create', style: TextStyle(fontSize: 20)),
+              ),
+            ),
+
+            Expanded(
+              child: FutureBuilder<List<Crop>>(
+                future: _futureCrops,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('No crops available'));
+                  } else {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        var crop = snapshot.data![index];
+                        return Dismissible(
+                          key: Key(crop.id.toString()),
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (direction) {
+                            _deleteCrop(crop.id);
+                          },
+                          background: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerRight,
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Icon(Icons.delete, color: Colors.white),
+                          ),
+                          child: Card(
+                            child: ListTile(
+                              title: Text('Id: ${crop.id}'),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Name: ${crop.name}'),
+                                  Text('Description: ${crop.description}'),
+                                  Text('Cares: ${crop.cares}'),
+                                  Text('Diseases: ${crop.diseases}'),
+                                  Text('Pests: ${crop.pests}'),
+                                  Text('Image: ${crop.imageUrl.length > 20 ? crop.imageUrl.substring(0, 20) + '...' : crop.imageUrl}'),
+                                ],
+                              ),
+                              trailing: IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: () => _editCrop(crop),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
             ),
           ],
         ),

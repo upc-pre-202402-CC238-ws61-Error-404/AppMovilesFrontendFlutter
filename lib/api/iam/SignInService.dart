@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'SignInRequest.dart';
 
 class SignInService {
-  final String _baseUrl = 'https://appmovileschaquiservertacllamaximum.azurewebsites.net/api/v1/authentication/sign-in';
+  final String _baseUrl = 'http://10.0.2.2:5138/api/v1/authentication/sign-in';
 
   Future<SignInResponse?> signIn(SignInRequest request) async {
     final response = await http.post(

@@ -60,6 +60,8 @@ class _DiseasesState extends State<Diseases> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFF005F40),
+        foregroundColor: Colors.white,
         title: Text('Diseases'),
       ),
       body: Padding(
@@ -68,21 +70,46 @@ class _DiseasesState extends State<Diseases> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
+              decoration: InputDecoration(
+                labelText: 'Name',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                ),
+              ),
             ),
+            SizedBox(height: 16),
             TextField(
               controller: _descriptionController,
-              decoration: InputDecoration(labelText: 'Description'),
+              decoration: InputDecoration(
+                labelText: 'Description',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                ),
+              ),
             ),
+            SizedBox(height: 16),
             TextField(
               controller: _solutionController,
-              decoration: InputDecoration(labelText: 'Solution'),
+              decoration: InputDecoration(
+                labelText: 'Solution',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                ),
+              ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _createDisease,
-              child: Text('Create Disease'),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _createDisease,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF9A5D4E),
+                  foregroundColor: Colors.white,
+                ),
+                child: Text('Create', style: TextStyle(fontSize: 20)),
+              ),
             ),
+
             SizedBox(height: 16),
             Expanded(
               child: FutureBuilder<List<CropDisease.Disease>?>(
