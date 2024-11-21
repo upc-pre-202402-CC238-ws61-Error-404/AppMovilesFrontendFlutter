@@ -194,7 +194,8 @@ class _MenuState extends State<Menu> {
               ),
             ),
 
-            FutureBuilder<Meme>(
+            //Comentado por la funa
+            /*FutureBuilder<Meme>(
               future: meme,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -221,7 +222,7 @@ class _MenuState extends State<Menu> {
                   return Center(child: Text('No meme available'));
                 }
               },
-            )
+            )*/
 
 
 

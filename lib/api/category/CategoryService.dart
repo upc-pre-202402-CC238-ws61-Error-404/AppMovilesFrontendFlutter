@@ -9,7 +9,7 @@ class CategoryService {
   static Future<List<Category>?> getCategories() async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.get(
-      Uri.parse('http://10.0.2.2:5138/api/v1/forum/categories'),
+      Uri.parse('https://appchaquitaclla.azurewebsites.net/api/v1/forum/categories'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -29,7 +29,7 @@ class CategoryService {
   Future<bool> createCategory(CategoryRequest request) async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:5138/api/v1/forum/categories'),
+      Uri.parse('https://appchaquitaclla.azurewebsites.net/api/v1/forum/categories'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -49,7 +49,7 @@ class CategoryService {
   Future<bool> updateCategory(int categoryId, CategoryRequest request) async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.put(
-      Uri.parse('http://10.0.2.2:5138/api/v1/forum/categories/$categoryId'),
+      Uri.parse('https://appchaquitaclla.azurewebsites.net/api/v1/forum/categories/$categoryId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -69,7 +69,7 @@ class CategoryService {
   Future<bool> deleteCategory(int categoryId) async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.delete(
-      Uri.parse('http://10.0.2.2:5138/api/v1/forum/categories/$categoryId'),
+      Uri.parse('https://appchaquitaclla.azurewebsites.net/api/v1/forum/categories/$categoryId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',

@@ -9,7 +9,7 @@ class DiseaseService {
   static Future<List<Disease>?> getDiseases() async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.get(
-      Uri.parse('http://10.0.2.2:5138/api/v1/crops-management/crops/diseases'),
+      Uri.parse('https://appchaquitaclla.azurewebsites.net/api/v1/crops-management/crops/diseases'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -29,7 +29,7 @@ class DiseaseService {
   Future<bool> createDisease(DiseaseRequest request) async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:5138/api/v1/crops-management/crops/diseases'),
+      Uri.parse('https://appchaquitaclla.azurewebsites.net/api/v1/crops-management/crops/diseases'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
