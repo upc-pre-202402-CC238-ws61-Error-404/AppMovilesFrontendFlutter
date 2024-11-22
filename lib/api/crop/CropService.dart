@@ -10,7 +10,7 @@ class CropService {
   Future<bool> createCrop(CropRequest request) async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.post(
-      Uri.parse('https://appchaquitaclla.azurewebsites.net/api/v1/crops-management/crops'),
+      Uri.parse('https://appfinalwowmovil.azurewebsites.net/api/v1/crops-management/crops'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -30,7 +30,7 @@ class CropService {
   Future<List<Crop>> getCrops() async{
     final token = AuthManager().signInResponse?.token;
     final response = await http.get(
-      Uri.parse('https://appchaquitaclla.azurewebsites.net/api/v1/crops-management/crops'),
+      Uri.parse('https://appfinalwowmovil.azurewebsites.net/api/v1/crops-management/crops'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -50,7 +50,7 @@ class CropService {
   Future<bool> updateCrop(int cropId, CropRequest request) async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.put(
-      Uri.parse('https://appchaquitaclla.azurewebsites.net/api/v1/crops-management/crops/$cropId'),
+      Uri.parse('https://appfinalwowmovil.azurewebsites.net/api/v1/crops-management/crops/$cropId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -70,7 +70,7 @@ class CropService {
   Future<bool> deleteCrop(int cropId) async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.delete(
-      Uri.parse('https://appchaquitaclla.azurewebsites.net/api/v1/crops-management/crops/$cropId'),
+      Uri.parse('https://appfinalwowmovil.azurewebsites.net/api/v1/crops-management/crops/$cropId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',

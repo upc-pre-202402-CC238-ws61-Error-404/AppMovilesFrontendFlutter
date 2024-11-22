@@ -12,7 +12,7 @@ class CareService {
   static Future<List<Care>?> getCares() async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.get(
-      Uri.parse('https://appchaquitaclla.azurewebsites.net/api/v1/crops-management/crops/cares'),
+      Uri.parse('https://appfinalwowmovil.azurewebsites.net/api/v1/crops-management/crops/cares'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -32,7 +32,7 @@ class CareService {
   Future<bool> createCare(CareRequest request) async {
     final token = AuthManager().signInResponse?.token;
     final response = await http.post(
-      Uri.parse('https://appchaquitaclla.azurewebsites.net/api/v1/crops-management/crops/cares'),
+      Uri.parse('https://appfinalwowmovil.azurewebsites.net/api/v1/crops-management/crops/cares'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
